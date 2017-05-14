@@ -1,8 +1,8 @@
 define(
     ['jquery', 'underscore', 'underscore.string', 'pgadmin', 'pgadmin.browser.menu',
-     'backbone', 'alertify', 'pgadmin.browser.datamodel', 'backform',
+     'backbone', 'alertify', 'pgadmin.browser.datamodel', 'backform', 'aciTreeColour',
      'pgadmin.backform', 'wcdocker', 'pgadmin.alertifyjs'],
-function($, _, S, pgAdmin, Menu, Backbone, Alertify, pgBrowser, Backform) {
+function($, _, S, pgAdmin, Menu, Backbone, Alertify, pgBrowser, Backform, aciTreeColour) {
 
   var wcDocker = window.wcDocker;
 
@@ -743,7 +743,7 @@ function($, _, S, pgAdmin, Menu, Backbone, Alertify, pgBrowser, Backform) {
           t.setLabel(
             pItem, {
               label: (
-                _.escape(pData._label) + ' <span>(' + pData.collection_count + ')</span>'
+                aciTreeColour.getColouredAciTreeLabel(pData)
               )
             }
           );
@@ -821,7 +821,7 @@ function($, _, S, pgAdmin, Menu, Backbone, Alertify, pgBrowser, Backform) {
           t.setLabel(
             pItem, {
               label: (
-                _.escape(pData._label) + ' <span>(' + pData.collection_count + ')</span>'
+                aciTreeColour.getColouredAciTreeLabel(pData)
               )
             }
           );
@@ -838,7 +838,7 @@ function($, _, S, pgAdmin, Menu, Backbone, Alertify, pgBrowser, Backform) {
         if (self.is_collection && 'collection_count' in data)
         {
           delete data.collection_count;
-          t.setLabel(item, {label: _.escape(data._label)});
+          t.setLabel(item, {label: aciTreeColour.getColouredAciTreeLabel(data)});
         }
       },
       refresh: function(cmd, i) {

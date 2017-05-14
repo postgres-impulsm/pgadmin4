@@ -1,6 +1,7 @@
 define('pgadmin.browser',
         ['require', 'jquery', 'underscore', 'underscore.string', 'bootstrap',
-        'pgadmin', 'alertify', 'codemirror', 'codemirror/mode/sql/sql', 'wcdocker',
+        'pgadmin', 'alertify', 'codemirror', 'aciTreeColour',
+        'codemirror/mode/sql/sql', 'wcdocker',
         'jquery.contextmenu', 'jquery.aciplugin', 'jquery.acitree',
         'pgadmin.alertifyjs', 'pgadmin.browser.messages',
         'pgadmin.browser.menu', 'pgadmin.browser.panel',
@@ -8,7 +9,7 @@ define('pgadmin.browser',
         'pgadmin.browser.node', 'pgadmin.browser.collection'
 
        ],
-function(require, $, _, S, Bootstrap, pgAdmin, Alertify, CodeMirror) {
+function(require, $, _, S, Bootstrap, pgAdmin, Alertify, CodeMirror, aciTreeColour) {
 
   // Some scripts do export their object in the window only.
   // Generally the one, which do no have AMD support.
@@ -43,7 +44,7 @@ function(require, $, _, S, Bootstrap, pgAdmin, Alertify, CodeMirror) {
     }
     _.each(data, function(d){
       d._label = d.label;
-      d.label = _.escape(d.label);
+      d.label = aciTreeColour.getColouredAciTreeLabel(d);
     })
     return data;
   };
@@ -502,6 +503,9 @@ function(require, $, _, S, Bootstrap, pgAdmin, Alertify, CodeMirror) {
         } catch (e) {
           console.log(e);
         }
+
+        aciTreeColour.aciTreeEventHandler(obj, event, api, item, eventName, options);
+
         return true;
       });
 
@@ -1051,7 +1055,7 @@ function(require, $, _, S, Bootstrap, pgAdmin, Alertify, CodeMirror) {
         return;
       }
       _data._label = _data.label;
-      _data.label = _.escape(_data.label);
+      _data.label = aciTreeColour.getColouredAciTreeLabel(_data);
 
       traversePath();
     },
@@ -1391,7 +1395,7 @@ function(require, $, _, S, Bootstrap, pgAdmin, Alertify, CodeMirror) {
       }
       ctx.pI.push(_old);
       _new._label = _new.label;
-      _new.label = _.escape(_new.label);
+      _new.label = aciTreeColour.getColouredAciTreeLabel(_new);
 
       if (_old._pid != _new._pid) {
         ctx.op = 'RECREATE';
@@ -1467,7 +1471,7 @@ function(require, $, _, S, Bootstrap, pgAdmin, Alertify, CodeMirror) {
                 var data = res.result || res.data;
 
                 data._label = data.label;
-                data.label = _.escape(data.label);
+                data.label = aciTreeColour.getColouredAciTreeLabel(data);
                 var d = ctx.t.itemData(ctx.i);
                 _.extend(d, data);
                 ctx.t.setLabel(ctx.i, {label: _d.label});
