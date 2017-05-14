@@ -269,6 +269,15 @@ def create_app(app_name=None):
             from setup import do_upgrade
             do_upgrade(app, user_datastore, version)
 
+        # colour feature db migration
+        from sqlalchemy.exc import OperationalError as SqlOperationalError
+        try:
+            db.engine.execute(
+                'alter table "servergroup" add column "colour" varchar(64)'
+            )
+        except SqlOperationalError:
+            pass
+
     ##########################################################################
     # Setup security
     ##########################################################################
