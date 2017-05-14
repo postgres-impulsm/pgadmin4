@@ -9,7 +9,7 @@ function($, _, pgAdmin, Backbone) {
       dialogHelp: '{{ url_for('help.static', filename='server_group_dialog.html') }}',
       label: '{{ _('Server Group') }}',
       width: '350px',
-      height: '250px',
+      height: '300px',
       is_collection: true,
       Init: function() {
         /* Avoid multiple registration of menus */
@@ -36,6 +36,9 @@ function($, _, pgAdmin, Backbone) {
             mode: ['properties']
           },{
             id: 'name', label:'{{ _('Name') }}', type: 'text', group: null,
+            mode: ['properties', 'edit', 'create']
+          },{
+            id: 'colour', label: 'Colour', type: 'text', group: null,
             mode: ['properties', 'edit', 'create']
           }
         ],

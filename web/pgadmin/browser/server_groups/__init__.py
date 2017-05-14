@@ -40,7 +40,8 @@ class ServerGroupModule(BrowserPluginModule):
                 "icon-%s" % self.node_type,
                 True,
                 self.node_type,
-                can_delete=True if idx > 0 else False
+                can_delete=True if idx > 0 else False,
+                colour=group.colour,
             )
 
     @property
@@ -94,6 +95,19 @@ class ServerGroupView(NodeView):
     node_type = ServerGroupModule.NODE_TYPE
     parent_ids = []
     ids = [{'type': 'int', 'id': 'gid'}]
+
+    def _normalize_colour(self, colour):
+        from re import fullmatch
+        
+        if not colour:
+            return None
+        
+        assert isinstance(colour, str)
+        
+        if not fullmatch(r'\#?[A-Za-z0-9]*', colour):
+            return None
+        
+        return colour
 
     def list(self):
         res = []
@@ -173,6 +187,8 @@ class ServerGroupView(NodeView):
             try:
                 if u'name' in data:
                     servergroup.name = data[u'name']
+                if 'colour' in data:
+                    servergroup.colour = self._normalize_colour(data['colour'])
                 db.session.commit()
             except Exception as e:
                 return make_json_response(
@@ -187,7 +203,8 @@ class ServerGroupView(NodeView):
                 "icon-%s" % self.node_type,
                 True,
                 self.node_type,
-                can_delete=True  # This is user created hence can deleted
+                can_delete=True,  # This is user created hence can deleted
+                colour=servergroup.colour,
             )
         )
 
@@ -209,7 +226,7 @@ class ServerGroupView(NodeView):
             )
         else:
             return ajax_response(
-                response={'id': sg.id, 'name': sg.name},
+                response={'id': sg.id, 'name': sg.name, 'colour': sg.colour},
                 status=200
             )
 
@@ -235,6 +252,8 @@ class ServerGroupView(NodeView):
                 sg = ServerGroup(
                     user_id=current_user.id,
                     name=data[u'name'])
+                if 'colour' in data:
+                    sg.colour = self._normalize_colour(data['colour'])
                 db.session.add(sg)
                 db.session.commit()
 
@@ -248,7 +267,8 @@ class ServerGroupView(NodeView):
                         "icon-%s" % self.node_type,
                         True,
                         self.node_type,
-                        can_delete=True  # This is user created hence can deleted
+                        can_delete=True,  # This is user created hence can deleted
+                        colour=sg.colour,
                     )
                 )
             except Exception as e:
@@ -302,7 +322,8 @@ class ServerGroupView(NodeView):
                         group.name,
                         "icon-%s" % self.node_type,
                         True,
-                        self.node_type
+                        self.node_type,
+                        colour=group.colour,
                     )
                 )
         else:
@@ -316,7 +337,8 @@ class ServerGroupView(NodeView):
                 group.name,
                 "icon-%s" % self.node_type,
                 True,
-                self.node_type
+                self.node_type,
+                colour=group.colour,
             )
 
         return make_json_response(data=nodes)
