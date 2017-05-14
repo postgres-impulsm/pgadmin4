@@ -1,6 +1,7 @@
 define('pgadmin.browser',
         ['require', 'jquery', 'underscore', 'underscore.string', 'bootstrap',
         'pgadmin', 'alertify', 'codemirror', 'sources/check_node_visibility',
+        'aciTreeColour',
         'codemirror/mode/sql/sql', 'wcdocker',
         'jquery.contextmenu', 'jquery.aciplugin', 'jquery.acitree',
         'pgadmin.alertifyjs', 'pgadmin.browser.messages',
@@ -11,7 +12,8 @@ define('pgadmin.browser',
        ],
 function(
   require, $, _, S, Bootstrap, pgAdmin, Alertify,
-  CodeMirror, checkNodeVisibility
+  CodeMirror, checkNodeVisibility,
+  aciTreeColour
 ) {
 
   // Some scripts do export their object in the window only.
@@ -47,7 +49,7 @@ function(
     }
     _.each(data, function(d){
       d._label = d.label;
-      d.label = _.escape(d.label);
+      d.label = aciTreeColour.getColouredAciTreeLabel(d);
     })
     return data;
   };
@@ -506,6 +508,9 @@ function(
         } catch (e) {
           console.log(e);
         }
+
+        aciTreeColour.aciTreeEventHandler(obj, event, api, item, eventName, options);
+
         return true;
       });
 
@@ -1074,7 +1079,7 @@ function(
         return;
       }
       _data._label = _data.label;
-      _data.label = _.escape(_data.label);
+      _data.label = aciTreeColour.getColouredAciTreeLabel(_data);
 
       traversePath();
     },
@@ -1434,7 +1439,7 @@ function(
       }
       ctx.pI.push(_old);
       _new._label = _new.label;
-      _new.label = _.escape(_new.label);
+      _new.label = aciTreeColour.getColouredAciTreeLabel(_new);
       if (_old._pid != _new._pid) {
         ctx.op = 'RECREATE';
         traversePath();
@@ -1509,7 +1514,7 @@ function(
                 var data = res.result || res.data;
 
                 data._label = data.label;
-                data.label = _.escape(data.label);
+                data.label = aciTreeColour.getColouredAciTreeLabel(data);
                 var d = ctx.t.itemData(ctx.i);
                 _.extend(d, data);
                 ctx.t.setLabel(ctx.i, {label: _d.label});
