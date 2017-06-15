@@ -89,6 +89,7 @@ class ServerGroup(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     name = db.Column(db.String(128), nullable=False)
+    colour = db.Column(db.String(64))
     __table_args__ = (db.UniqueConstraint('user_id', 'name'),)
 
 

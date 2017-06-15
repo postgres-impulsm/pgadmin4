@@ -252,6 +252,15 @@ def create_app(app_name=None):
     user_datastore = SQLAlchemyUserDatastore(db, User, Role)
     security = Security(None, user_datastore)
 
+    ## colour feature db migration
+    #from sqlalchemy.exc import OperationalError as SqlOperationalError
+    #try:
+    #    db.engine.execute(
+    #        'alter table "servergroup" add column "colour" varchar(64)'
+    #    )
+    #except SqlOperationalError:
+    #    pass
+
     ##########################################################################
     # Setup security
     ##########################################################################
